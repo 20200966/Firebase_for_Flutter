@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart'
 import 'package:flutter/material.dart';           
 import 'package:provider/provider.dart';          
 
-import 'app_state.dart';                          
+import 'app_state.dart';
+import 'guest_book.dart';                          
 import 'src/authentication.dart';                 
 import 'src/widgets.dart';
 
@@ -42,8 +43,22 @@ class HomePage extends StatelessWidget {
           const Paragraph(
             'Join us for a day full of Firebase Workshops and Pizza!',
           ),
-          const Header('Discussion'),
-          GuestBook(addMessage: (message) => print(message)),
+          
+          Consumer<ApplicationState>(
+            builder: (context, appState, _) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (appState.loggedIn) ...[
+                  const Header('Discussion'),
+                  GuestBook(
+                    addMessage: (message) =>
+                        appState.addMessageToGuestBook(message),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          
         ],
       ),
     );
