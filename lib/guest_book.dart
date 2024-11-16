@@ -8,13 +8,20 @@ import 'package:flutter/material.dart';
 
 import 'src/widgets.dart';
 
+import 'guest_book_message.dart';
+
 class GuestBook extends StatefulWidget {
-  const GuestBook({required this.addMessage, super.key});
+  const GuestBook({
+    super.key, 
+    required this.addMessage, 
+    required this.messages,
+  });
 
   final FutureOr<void> Function(String message) addMessage;
+  final List<GuestBookMessage> messages; // new
 
   @override
-  State<GuestBook> createState() => _GuestBookState();
+  _GuestBookState createState() => _GuestBookState();
 }
 
 class _GuestBookState extends State<GuestBook> {
