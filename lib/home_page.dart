@@ -7,6 +7,7 @@ import 'app_state.dart';
 import 'guest_book.dart';                          
 import 'src/authentication.dart';                 
 import 'src/widgets.dart';
+import 'yes_no_selection.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -23,7 +24,7 @@ class HomePage extends StatelessWidget {
           const SizedBox(height: 8),
           const IconAndDetail(Icons.calendar_today, 'October 30'),
           const IconAndDetail(Icons.location_city, 'San Francisco'),
-          // Add from here
+        
           Consumer<ApplicationState>(
             builder: (context, appState, _) => AuthFunc(
                 loggedIn: appState.loggedIn,
@@ -31,7 +32,7 @@ class HomePage extends StatelessWidget {
                   FirebaseAuth.instance.signOut();
                 }),
           ),
-          // to here
+        
           const Divider(
             height: 8,
             thickness: 1,
@@ -45,20 +46,33 @@ class HomePage extends StatelessWidget {
           ),
           
           Consumer<ApplicationState>(
-            builder: (context, appState, _) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (appState.loggedIn) ...[
-                  const Header('Discussion'),
-                  GuestBook(
-                    addMessage: (message) =>
-                        appState.addMessageToGuestBook(message),
-                        messages: appState.guestBookMessages,
-                  ),
-                ],
-              ],
+          builder: (context, appState, _) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+      
+            switch (appState.attendees) {
+            1 => const Paragraph('1 person going'),
+            >= 2 => Paragraph('${appState.attendees} people going'),
+            _ => const Paragraph('No one going'),
+            },
+      
+            if (appState.loggedIn) ...[
+        
+            YesNoSelection(
+            state: appState.attending,
+            onSelection: (attending) => appState.attending = attending,
             ),
-          ),
+        
+            const Header('Discussion'),
+            GuestBook(
+             addMessage: (message) =>
+              appState.addMessageToGuestBook(message),
+              messages: appState.guestBookMessages,
+            ),
+          ],
+        ],
+      ),
+    ),
           
         ],
       ),
